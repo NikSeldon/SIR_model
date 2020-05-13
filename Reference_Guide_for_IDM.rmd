@@ -1,0 +1,766 @@
+---
+title: "reference_guide"
+author: "Nik Seldon"
+date: "5/13/2020"
+output: html_document
+---
+
+
+# R Reference guide for IDM  
+
+# Contents
+1. [How to read and use this guide](#howread)
+
+2. [Things to know](#things)  
+2.1 [When writing your own code](#ownCode)  
+2.2 [Not covered here](#nothere)  
+2.3 [Computers are logical; languages can be weird](#weird)  
+
+3. [Get started](#start)  
+3.1 [On Coursera: Jupyter](#coursera)  
+3.2 [R and RStudio](#Rstudio)  
+
+4. [Basics / refresher: comments, variable assignation, function calls](#4)  
+
+5. [Data Types](#5)  
+5.1 [Atomic types, and creating atomic vectors](#5.1)  
+5.1.1 [Coercion](#coercion)  
+5.1.2 [Missing values: `NA`](#NA)  
+
+6. [Data Structures](#structures)  
+6.1 [Vectors and matrices](#6.1)  
+6.1.1 [Selecting elements: \[\]](#6.1.1)  
+6.2 [Lists](#lists)  
+6.2.1 [Selecting from a list: `[[]]` and `[]`, and by `$`name](#listselect)   
+6.2.2 [Dataframes: a special case of a list](#dataframes)  
+6.3 [Data formats: Wide and long](#widelong)  
+
+7. [Functions](#functions)  
+7.1 [Vectorisation](#vectorise)  
+7.2 [Reading the help file for a function](#helpfile)  
+7.3 [Make your own function](#ownfunc)  
+
+8. [Base R and packages](#packages)  
+
+9. [Plotting](#plot)  
+9.1 [Base R: ```plot()```](#baseplot)  
+9.2 [More sophisticated plots: ```ggplot```](#ggplot)  
+
+10. [Finding general help and resources](#resources)
+
+
+# 1. How to read and use this guide<a name="howread"></a>
+
+This is intended as a quick reference guide to the R you will need for Infectious Disease Modelling, starting from the basics, and noting common sources of error along the way. If you want to go further with R or programming in general, there is a *lot* of information on the internet: see [section 10](#resources) for some suggestions.
+
+* R code within text looks like this: `x <- 7`.  
+* Functions will be referred to like this: `function()` (with parentheses after the function name)  
+* You can copy and paste code from here into your own R script to run it. Where there's function output examples in the code blocks in this document, they start like this: `#> `   
+
+# 2. Things to know<a name="things"></a>
+
+No-one memorises everything! If you know how to look up what you want to do, and understand what you find, you're most of the way there.
+
+
+## 2.1 When writing your own code<a name="ownCode"></a>
+
+Put ```# comments``` everywhere - for your benefit while learning and for referring back to after a period of time. (Also, for other people who might use your code!)
+
+Aim for consistent formatting and naming:  
+
+* R doesn't enforce much formatting, but without doing things like indenting your code where appropriate, it's difficult to read, and even harder to find problems or make changes.  
+  
+* Variable names:  
+    * Keep in mind, R is case-sensitive.  
+    * snake_case (words separated by underscores) is often recommended for variable names; you can't have spaces, and separating with dots is used in other contexts in R so it can cause confusion. 
+    * Meaningful variable names can help you follow your work.  
+  
+* For a style guide: look here <https://style.tidyverse.org/index.html>  
+
+There is usually more than one way of programming something. What you use will often be a matter of preference.
+ 
+
+## 2.2 Not covered here<a name="nothere"></a>
+
+Many concepts in programming and R specific topics are not covered (or not in any detail): of note,
+
+* if/then/else statements, loops <https://www.datacamp.com/community/tutorials/tutorial-on-loops-in-r>
+* data structures with more than 2 dimensions
+* Tidyverse (<https://www.tidyverse.org/>), apart from ggplot
+* environments
+* all the functionality of RStudio  
+
+
+
+## 2.3 Computers are logical; languages can be weird<a name="weird"></a>
+
+Like human languages, programming languages have similarities and differences; you may have prior knowledge about how other languages do things - or you might find this out in the future. In general, if you think a language has some strange syntax or weird function names, or behaves oddly, remember that this might be due to:  
+
+* historical reasons - a language evolves as people develop it, not always totally logically
+* speed optimisation
+* storage optimisation (storage used to be expensive!)
+* other implementation reasons
+
+R was developed for statistics; some aspects of R can be traced to this history.  
+
+So whether or not you already know other languages, keep an open mind when it comes to 'idiosyncracies', and be aware that other programming languages do differ!
+
+    
+***  
+
+# 3. Getting started<a name="start"></a>
+
+In this course, your training in writing infectious disease models in R is delivered through *notebooks*.
+
+A "notebook" document can include text, code chunks (or cells), and code output - e.g.  plots. Text can be formatted with *markdown* -  markers are used to denote formatting. For example, \*this text\* will come out as *this text* - in italics. The code chunks/cells can be run within the notebook, or the whole document can be exported to html for use online, or a .pdf file. This is particularly useful for preparing resources such as this guide.
+ 
+[Rstudio](https://www.rstudio.com/products/rstudio/download/) contains the functionality needed to create and use an R notebook. In this course, we use Jupyter notebooks. This is integrated into the Coursera platform - you can work online without having to download R, Rstudio, etc.
+
+
+## 3.1 On Coursera: Jupyter Notebooks<a name="coursera"></a>
+
+We give you etivities written within a Jupyter notebook. Instructions are interspersed with cells containing some example code and some code for you to complete. See the quick guide here: <LINK TO GUIDE>
+
+Coursera help available here:
+https://learner.coursera.help/hc/en-us/articles/360004995312-Solve-problems-with-Jupyter-Notebooks
+
+
+```R
+## Code in a notebook will be in a section which looks like this
+
+example <- "here is an example"
+
+# when it's your turn, we use this convention:
+
+yourturn <- #YOUR CODE#
+
+```
+
+## 3.2 On your computer: R and RStudio<a name="Rstudio"></a>
+
+If you can and want to work on your own computer, and become familiar with a common R user setup:
+
+**Install R** from: (https://cran.r-project.org/) (searching R download should find this)
+
+**Install RStudio** (free version) from: (https://www.rstudio.com/products/rstudio/download/).  
+
+RStudio is an Integrated Development Environment (IDE) for R. IDEs add many useful features to your programming experience, panels showing history, help, plots, etc.  
+See <http://ncss-tech.github.io/stats_for_soil_survey/chapters/1_introduction/1_introduction.html#3_rstudio:_an_integrated_development_environment_(ide)_for_r> for an illustration. An IDE has more features than a good text editor such as [notepad++](https://notepad-plus-plus.org/), which will at least do things such as syntax highlighting (colouring your code).
+
+
+Get started after installation:
+
+* open RStudio and open a new R script 
+* decide on a working directory, especially if you will load data from files, and/or have multiple scripts
+    * it's good to keep files associated with your work in one place
+    * type ```setwd("[insert path here]")```
+
+
+```R
+setwd("C:/mydocs/mynewproject") # in Windows, use / for a separator
+setwd("~/mydocs/mynewproject") # linux/ mac
+
+```
+
+You'll mostly type or copy into your script, like writing a text file; and then run (all or some of it). Output will appear in the console, plots in the plot panel, and as you create variables, they'll appear in the environment panel.
+
+
+If you're re-opening RStudio, having worked in it before: 
+RStudio can save your open scripts and the contents of your environment, which can help if it was closed unexpectedly but beware that you should not rely on anything specifically being saved. 
+
+# 4. Basics / refresher: comments, variable assignation, function calls<a name="4"></a>
+
+
+```R
+# text starting with # are comments (they don't get run)
+
+# text starting with # are comments (they aren't run as code)
+
+x <- 10 # 'assigns' the value 10 to a name, x
+# read this as "x gets 10"
+# once you have created an object, you can refer to it by name in later code
+y <- 2 * x
+
+# R doesn't tell you if you've already used a name, it just reassigns
+x <- 20 # x is now 20
+a <- x # a is given the same value as x
+x <- 50 # now x is 50. a keeps the value it had before, rather than changing when you change x
+
+# Note: not all programming languages work this way! Some treat variables as "pointers" to objects, and changing the object would affect each pointer to it.
+
+# R is case sensitive:
+X <- 51 # capital X, not the same as x
+
+## Functions
+# to call a function, use the function name, with the arguments - inputs - in parentheses
+print(x)  # this returns the contents of x to the screen
+y         # shorthand for printing the contents of y
+
+
+# Loading data
+dat <- read.csv(## "the path to your file goes here" ##)
+# the filename and path are entered as a character string, in quotes.    
+
+# If the file you want is in your working directory, R will find it with just the filename.
+    
+```
+
+
+10
+
+
+    [1] 50
+
+
+**A note on the use of the operator ```<-``` :**
+Many programming languages use the equals sign ```=``` for assignation. In R, you can use either ```<-``` or ```=```.  
+```<-``` is used partly for historical reasons, and some people prefer it to avoid confusion with ```==``` which is used for comparison. Within function calls, ```=``` is used for assigning arguments.
+
+
+
+# 5. Data Types<a name="5"></a>  
+
+## 5.1 Atomic types, and creating atomic vectors <a name="5.1"></a>
+
+R has 6 'atomic' - fundamental - types: logical, character, numeric types (integer, double, and complex), and raw (for binary data). They can be the building blocks for other types. 
+
+The type `factor` (you may know about factors from the statistics course) is special.
+
+The simplest *data structures* are **atomic vectors** (usually just called **vectors**). All *elements* in an atomic vector must be of one type.
+This code chunk shows you a function, ```c()```, using it to create vectors of the 4 common atomic types.
+
+We will use this example data later in the guide.
+
+
+```R
+# the function "c()" combines what you provide it. By default, it makes a vector.
+
+# logical vector
+infected         <- c(TRUE, FALSE, TRUE, TRUE, FALSE) # sometimes abbreviated to T and F
+# Often useful as the output of a function:
+# a function could test whether something is TRUE or FALSE
+# producing a logical vector
+# the contents of this can then determine what happens somewhere else
+
+# character vector
+parameters       <- c("mu", "gamma", "beta") 
+# character elements are given within quotes
+
+# numeric: double (short for: double precision floating point)
+min_temperature  <- c(1.51, 2.7, 3.1, 0.05, -2, 5) 
+
+# numeric: integer? 
+number_of_eggs   <- c(2, 4, 6, 8, 5) # doesn't actually make an integer vector
+typeof(number_of_eggs)
+#> [1] "double" 
+# Not an integer. To make an integer vector, either:
+number_of_eggs   <- as.integer(number_of_eggs) # converts your vector
+number_of_eggs   <- c(2L, 4L) 
+# L specifies the numbers are integers. 
+# We don't use "I" for integer - too close to a "1" 
+# and "i" is used in complex numbers.
+```
+
+
+'double'
+
+
+### 5.1.1 Coercion
+
+A function often expects certain data types and structures as inputs. 
+
+Above, ```number_of_eggs <- c(2, 4, 6, 8, 5)``` did not create an integer vector, even though all the elements were given as integers. R made it a double.
+
+Many languages require you to define your data type when you create (or 'declare') a variable. R does not. When you don't specify a type, R decides what it is. This can make getting started quick, but can hide issues if you make a mistake or if you don't know what R automatically decides.
+
+
+```R
+# For example, what does R do with this?
+stuff <- c(3, 4, TRUE, "cat")
+stuff
+#> [1] "3"    "4"    "TRUE" "cat" 
+# R has converted everything into the character type!
+```
+
+
+<ol class=list-inline>
+	<li>'3'</li>
+	<li>'4'</li>
+	<li>'TRUE'</li>
+	<li>'cat'</li>
+</ol>
+
+
+
+The function `c()` expects all the inputs to be the same type, so R chooses the first type on this hierarchy: *logical > integer > double > character* that all the inputs given could be. If you try to input a variable into a function which is expecting a different type, R will try to *coerce* what you give it into what it needs.
+
+
+
+```R
+#The function "paste()" expects character inputs.
+paste(number_of_eggs) 
+#> [1] "3 4 5" # the output here is a character vector (with one element); you can tell because the element is in quotes
+ 
+# Try taking the mean() of a character vector. Does R coerce to anything?
+# On the other hand, try taking the mean() of a character vector. Does R coerce to anything?
+var <- c("1", "2", "3")
+mean(var)
+
+# R returns a warning - it does not automatically coerce character variables into numbers.
+#> Warning in mean.default(parameters): argument is not numeric or logical:
+#> returning NA
+#> [1] NA
+```
+
+### 5.1.2 Missing values: NA<a name="NA"></a>
+Feeding a character vector to ```mean()``` returned ```NA```. ```NA``` represents missing values in R.  
+
+When a function cannot use the input given, it might return ```NA```.  
+If you need to show that data values are missing (e.g. one measurement wasn't available or applicable for a particular patient), you should include an `NA` in the relevant place.  
+
+It is important to distinguish between "missing" and "blank". Missing values often have to be specially considered, or removed. 
+
+
+
+
+
+# 6. Data Structures<a name="structures"></a>
+
+The main, fundamental data structures you will use, and how to select (and therefore also replace) elements from them.
+
+## 6.1 Vectors and matrices<a name="6.1"></a>
+[Atomic vectors](#5.1) are those where every element is of the same type.
+
+### 6.1.1 Selecting elements: `[]`<a name="6.1.1"></a>
+
+Square brackets are used to select elements:
+
+
+
+```R
+# Example data (see also Section 5.1)
+min_temperature  <- c(1.51, 2.7, 3.14, 0.05, -2, 5)
+parameters       <- c("mu", "gamma", "beta")
+
+# Return the second element
+min_temperature[2] 
+
+# Select and replace the contents of the first element
+min_temperature[1] <- 1.4 
+min_temperature[1]
+
+# Multiple elements can be selected in two ways 
+# - either by using a numbered index or using a logical vector. 
+parameters[c(2,3)]
+
+# When using a logical vector, it must be the same length as the data you are selecting from.
+# TRUE and FALSE denote whether each element should be selected.
+# This can be very useful when selecting only data that meets specific criteria, as we will see later.
+parameters[c(FALSE, TRUE, TRUE)]
+
+
+# Selection in two dimensions
+my_mat <- matrix(c(1:9), ncol = 3) # an example matrix using the numbers 1-9 (the colon is shorthand for creating a sequence)
+my_mat
+
+
+# To select from a this matrix you can use a single number, which will count down each column and row
+my_mat[8]
+
+# Use [i, j] notation to select the item at the i'th row, j'th column
+my_mat[2, 3]
+
+# or select a whole column like this (also works for rows!)
+my_mat[, 3]
+
+
+```
+
+
+2.7
+
+
+
+1.4
+
+
+
+<ol class=list-inline>
+	<li>'gamma'</li>
+	<li>'beta'</li>
+</ol>
+
+
+
+
+<ol class=list-inline>
+	<li>'gamma'</li>
+	<li>'beta'</li>
+</ol>
+
+
+
+
+<table>
+<tbody>
+	<tr><td>1</td><td>4</td><td>7</td></tr>
+	<tr><td>2</td><td>5</td><td>8</td></tr>
+	<tr><td>3</td><td>6</td><td>9</td></tr>
+</tbody>
+</table>
+
+
+
+
+8
+
+
+
+8
+
+
+
+<ol class=list-inline>
+	<li>7</li>
+	<li>8</li>
+	<li>9</li>
+</ol>
+
+
+
+Note - many other programming languages count starting from 0, so the first element would be referenced using [0], the second element would be [1], and so on. In R, data structures are indexed starting at 1.
+
+## 6.2 Lists<a name="lists"></a>
+
+Sometimes called **generic vectors**, distinguishing them from atomic vectors.
+
+The elements of a list contain other data structures. You can have different structures and different types in one list:
+vectors, matrices, other lists, functions... 
+
+### 6.2.1 Selecting from a list: `[[]]` and `[]`, and `$name`<a name="listselect"></a>
+
+Selecting from lists works slightly differently than selecting from vectors.
+
+
+
+```R
+# Example data (see also Section 5.1)
+infected         <- c(TRUE, FALSE, TRUE, TRUE, FALSE)
+parameters       <- c("mu", "gamma", "beta")
+min_temperature  <- c(1.51, 2.7, 3.1, 0.05, -2, 5)
+
+# Create a list containing the 'infected', 'parameters' and 'min_temperature' vectors
+my_list <- list(infected, parameters, min_temperature)
+
+# To select a "slice" or subset of the list use single brackets.
+# This returns part of your original list, as a list!
+my_list[1] # returns the first element of my_list, as a list
+
+# This is clearer if you select more than one element:
+my_list[c(1,2)] # returns the first two elements of my_list, as a list
+
+# To access the element itself, use double brackets.
+# Effectively we're selecting the slice, and then the element out of that slice.
+my_list[[1]] # note this now returns a vector, not a list!
+```
+
+
+    Error in eval(expr, envir, enclos): object 'infected' not found
+    Traceback:
+
+
+
+
+```R
+# We may want to first select an element of a list, then a part of the vector inside
+# In that case, either of these will work
+my_list[[c(2,1)]]
+my_list[[2]][1]
+
+```
+
+
+```R
+# All these number indexes can be hard to keep track of!
+# Instead, you can give the elements names.
+# Here the list is created as above, but with appropriate names:
+my_list <- list(status = infected, params = parameters, min_temps = min_temperature) 
+my_list
+
+# Notice the $name notation in the output!
+# You can select elements using their names in the same way
+my_list$params
+```
+
+<http://www.r-tutor.com/r-introduction/list> for a basic introduction to lists.
+
+### 6.2.2 **Names and other attributes**
+
+Names given to a data structure's elements (such as ``$status`` and ``$params``) are an example of an *attribute*. Attributes are "metadata", they give you information on the variable itself (rather than its contents). 
+
+Another important attribute is ```dimensions```. This gives information on the number of dimensions of a data structure. Giving a vector a ```dimensions``` attribute turns it into an array: an array with 2 dimensions is a matrix.
+
+
+
+### 6.2.3 Dataframes: a special case of a list <a name="dataframes"></a>
+
+Given that R has been developed for scientists, imagine a structure like a results table for recording outcomes of your experiments.
+
+Every element in a dataframe holds a vector of the same length. These vectors can be different types.
+You can treat a column like a vector, and the whole dataframe like a list.
+You can select using the [i, j] notation that works for matrices as well as the ways of selecting from a list.
+
+
+```R
+observations <- data.frame(patientID = c("A", "B", "C"), 
+                           test1 = c(27, 40, 48), 
+                           test2 = c(28, 25, 50),
+                           stringsAsFactors = FALSE) # this last argument means the character inputs - strings - are not treated as factors
+head(observations) # have a look at the top few rows (5 rows by default)
+
+```
+
+
+<table>
+<thead><tr><th scope=col>patientID</th><th scope=col>test1</th><th scope=col>test2</th></tr></thead>
+<tbody>
+	<tr><td>A </td><td>27</td><td>28</td></tr>
+	<tr><td>B </td><td>40</td><td>25</td></tr>
+	<tr><td>C </td><td>48</td><td>50</td></tr>
+</tbody>
+</table>
+
+
+
+You can select from dataframes (and other data structures) using a condition. Think of this as "filtering" the data for a desired property.
+
+
+```R
+observations[observations$test1 < 30, ]
+# or
+observations[observations$patientID == "B", ]
+
+```
+
+Note: the tidyverse has lots of functionality on data structures, and now has a new type of structure: the ```tibble```. See <https://www.tidyverse.org/> for the comprehensive guide to the tidyverse.
+
+
+## 6.3 Data formats: Wide and long
+When you imagine a "results table" you might think of a table like the ```observations``` [dataframe](#dataframes):
+
+
+```R
+observations
+```
+
+
+<table>
+<thead><tr><th scope=col>patientID</th><th scope=col>test1</th><th scope=col>test2</th></tr></thead>
+<tbody>
+	<tr><td>A </td><td>27</td><td>28</td></tr>
+	<tr><td>B </td><td>40</td><td>25</td></tr>
+	<tr><td>C </td><td>48</td><td>50</td></tr>
+</tbody>
+</table>
+
+
+
+This is "wide" format. Lots of situations require "long" format. There's a useful pair of functions that helps here:
+
+
+```R
+#
+require(reshape2)
+
+melt(observations, id.vars = c("patientID"))
+
+```
+
+
+    Error in melt(observations, id.vars = c("patientID")): object 'observations' not found
+    Traceback:
+
+
+    1. melt(observations, id.vars = c("patientID"))
+
+
+Can you see why they are called "wide" and "long" format? Essentially, wide format is one row per patient, in this example, with all the data for one patient in one row, and long gives us multiple rows per patient, with each test having its own row.
+
+# 7. Functions
+
+A function takes in inputs, called *arguments*, and does "something" with them. One of the simplest, most commonly used functions, ```c()```, combines what you give it, into a vector. Functions generally expect particular types of input; arguments you give, might be coerced to that type or structure if possible, or you might get an error.  
+
+
+```R
+# You can pass arguments in directly
+mean(c(1.51, 2.7, 3.1, 0.05, -2, 5))
+
+# Or pass in the name of a variable, as long as it exists in your environment
+min_temperature  <- c(1.51, 2.7, 3.1, 0.05, -2, 5)
+mean(min_temperature)    
+```
+
+
+```R
+# some functions look a bit different, e.g. +
+
+1 + 2 
+#> [1] 3
+# here, you are applying the function '+', to the arguments 1 and 2. 
+# For some functions, this is more intuitive syntax.
+```
+
+## 7.1 Vectorisation
+Many functions can take a vector as input. Either the function is applied using the whole vector, such as the ```mean()``` example, or functions can be applied element-by-element.
+<https://bookdown.org/rdpeng/rprogdatascience/vectorized-operations.html> shows a couple of examples.
+
+This means if you need to do something to a whole vector, you don't have to read through the elements one-by-one. Useful!
+
+## 7.2 Reading the help file for a function<a name="helpfile"></a>
+```?functionname``` retrieves the help file.
+They are all structured similarly:  
+The Arguments section tells you the arguments the function expects.  
+Many functions have a Value section: this is the output of the function.
+
+Arguments of a function, can be functions.
+The function ```apply()``` takes in a function and a data structure and applies it to relevant divisions of the data structure (for example, if you need to apply a function over each row of a matrix in turn).
+
+## 7.3 Make your own function<a name="ownfunc"></a>
+
+There is plenty of this in the IDM specialisation!
+
+
+```R
+# Make a function which takes in a character vector, and says Hi.
+
+greetings <- function(x) { # function takes in 1 argument
+                           # the argument gets assigned the name x within the environment of the function
+
+    hello <- paste("Hi", x, "!")
+    return(hello)  
+
+}
+
+greetings("Doctor")
+greetings(c("Doctor", "Professor")) # Vectorised
+greetings(1) # coerces the input to character.
+```
+
+
+```R
+# Let's create a function which requires a numeric argument.
+# This function takes one argument representing a temperature in Fahrenheit, and converts it to Celcius
+f_to_c <- function(f) { 
+  c <- (f - 32) * (5 / 9)
+  return(c)
+}
+
+f_to_c(90) # would f_to_c("ninety") work? Try it!
+```
+
+# 8. Base R and packages<a name="packages"></a>
+
+**Base R** comes with the default installation. A **package** is a collection of functions (and sometimes data), developed for particular uses.
+You can think of the R "library" as containing many packages. Some packages are installed with the default installation, such as the stats package, as these are so fundamental for most users.
+
+`install.packages()`: installs packages  
+`library()` takes a package name and loads it, if installed. Then you can directly use the functions in it.
+
+The main, non-base R packages you will use in IDM are deSolve, ggplot, and reshape.
+
+# 9. Plotting<a name="plot"></a>
+
+## 9.1 Base R: ```plot()``` <a name="baseplot"></a>
+R's built-in ```plot()``` function is versatile; you can often get a quick look at your data easily.
+Plot has a lot of methods which R chooses from depending on the data you give it, to produce a suitable plot.
+There are also built-in functions such as ```boxplot``` which are quick and easy.
+We'll use the ```observations``` dataframe, as [above](#dataframes):
+
+
+
+
+```R
+# load our example observations
+observations <- data.frame(patientID = c("A", "B", "C"), 
+                           test1 = c(27, 40, 48), 
+                           test2 = c(28, 25, 50),
+                           stringsAsFactors = FALSE)
+
+# examples of basic, base plots
+plot(observations$test1, observations$test2)
+boxplot(observations$test1, observations$test2)
+```
+
+## 9.2 More sophisticated plots: ```ggplot```<a name="ggplot"></a>
+A powerful system for visualising data.  
+
+* makes you think about the structure and the meaning of your data in order to visualise it
+* the syntax is very different to base plotting functions
+ 
+You create a ggplot object, and then add layers with whatever ```aes```thetics you require: aesthetics includes defining how your variables in your data are assigned to the axes, how they are formatted, and presented.
+
+To learn about ggplot, go here: <http://r-statistics.co/ggplot2-Tutorial-With-R.html> - a nice tutorial, which we will not simply rewrite here!
+A note: early on, that tutorial says to state what dataframe to use first. This is not necessary; each layer of a ggplot can be drawn from different dataframes, using a ```data = ``` argument. But you should think carefully about your data if you are doing this!
+
+Let's have a quick look at ggplot:
+
+
+```{r}
+require(ggplot2)
+
+# load our example observations
+observations <- data.frame(patientID = c("A", "B", "C"), 
+                           test1 = c(27, 40, 48), 
+                           test2 = c(28, 25, 50),
+                           stringsAsFactors = FALSE)
+
+# ggplot
+patient_plot <- ggplot(data = observations)
+patient_plot <- patient_plot + geom_point(aes(x = test1, y = test2)) ## aes = short for aesthetics
+patient_plot
+```
+
+# 10. Finding general help and resources<a name="resources"></a>
+**within R**: 
+
+* `?functionname` to get the help file for a function
+    * parts of the help file also show up automatically in RStudio when you type functions
+* When you get error messages - search for them on the internet if you can't work out what's wrong
+
+**on the internet: Infectious Disease Modelling-specific**:  
+
+https://www.reconlearn.org/  
+
+**on the internet: General R**:  
+
+* Getting started with R and RStudio <https://www.reconlearn.org/post/practical-intror.html>  
+This is part of the reconlearn collection, and is a great introduction to working in R.
+
+* General guides - RStudio website <https://www.rstudio.com/online-learning/#r-programming>
+has plenty of links and suggestions for R programming and related subjects.
+
+* <https://cran.r-project.org/>  
+    * manuals for packages
+    * **vignettes** - useful examples  
+    * e.g. for deSolve: <https://cran.r-project.org/web/packages/deSolve/index.html>
+
+* Books (free, online)
+    * <https://adv-r.hadley.nz/> : Advanced R, Hadley Wickham (Second edition)
+The title is "advanced R", but it starts off with a solid guide to fundamentals
+    * <https://r4ds.had.co.nz/> : R for data science, Hadley Wickham
+
+* ggplot help
+    * <http://r-statistics.co/ggplot2-Tutorial-With-R.html> - a nice tutorial
+    
+* **R language definitions**: the official explanation of R
+    * <https://cran.r-project.org/doc/manuals/r-release/R-lang.html#Introduction>
+
+* Q & A sites: such as <https://stackoverflow.com/>
+
+
+Bear in mind that R, and even more so certain packages, can change fast! Often, someone else will be writing something to solve an issue that you've been having, and the next time you look for help, you might find something new. This also means when you search the internet for help, it's often worth double-checking whether what you've found is still valid.
+
+
+```R
+
+```
