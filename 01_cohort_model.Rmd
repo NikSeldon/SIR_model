@@ -1,0 +1,128 @@
+---
+title: "Modelling an Infected Cohort"
+author: "Nik Seldon"
+date: "15 5 2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Loading the packages
+
+```{r}
+
+library(deSolve)   # package with functions to solve the model
+library(reshape2)  # package with functions to turn the model 
+                   # output into a long format
+library(ggplot2)   # package for plotting
+```
+
+# Filling in the input and specifying timesteps:
+```{r}
+initial_number_infected <- 1000000  # a cohort, 1000000 currently infected
+                                    # people
+initial_number_recovered <- 0       # no one has recovered
+                                    # at the beginning of the simulation
+recovery_rate <- 1/10               # the average duration spent in the I
+                                    # compartment is 10 days,
+                                    # so rate of recovery = 1/10 days^-1 
+                                    # or 0.1 per day
+follow_up_duration <- 4*7           # we want to know how many recover 
+                                    # over a 4 week period, 
+                                    # which equals 4*7 = 28 days
+
+# Combine into the model input vectors:
+initial_state_values <- c(I = initial_number_infected, 
+                          R = initial_number_recovered)  
+
+parameters <- c(gamma = recovery_rate)  
+
+times <- seq(from = 0, to = follow_up_duration, by = 1) 
+```
+
+ I and R in the initial_state_values vector store how many people
+ there are in each compartment at the 
+ first timestep t0 (the beginning of the simulation). 
+
+ The parameters vector stores the value of each transition rate
+ (arrows) between compartments (boxes). 
+ In this case we only have one transition: from I to R.
+
+ The times vector stores a sequence of timepoints starting at 0.
+ We want to run the model for 28 days, so 28 is the
+ last value in the times vector. by = 1 tells the deSolve package that
+ we want to calculate the model output at 
+ timesteps of 1 day.
+
+ It is important to be consistent with the time units (days vs. weeks):
+ the recovery rate you have defined is applied at every timestep
+ between 0 and the end of follow-up specified in the times vector. 
+ Since our recovery rate is in units of days^-1,
+ if you had put 4 as the follow-up duration, you would simply be 
+ calculating the number of infected and recovered people over a 4 days.
+ 
+# Specifying the model function
+ 
+```{r}
+cohort_model <- function(time, state, parameters) {    # specify the model 
+                                                       # as a function with
+                                                       # input arguments
+    
+    with(as.list(c(state, parameters)), {  
+      
+    # Differential equations
+      dI <- -gamma * I
+      dR <- gamma * I
+        
+    return(list(c(dI, dR)))                             # return output
+    })
+  
+}
+```
+
+# Further explanations:
+
+ To solve our model, called "cohort_model", using the deSolve package, 
+ we need to define it as a function.
+ When using deSolve, every model function takes as input arguments
+ (in the following order):
+ 
+ * 1) time: the timesteps that we want to solve the model at
+ * 2) state: storing the number of people in each compartment at each timestep
+ * 3) parameters: names and values of model parameters, for example the rates of transition between compartments
+
+ with(as.list(c(state, parameters)), {...} tells R to look
+ within the objects containing our state variables and 
+ parameters (by combining and converting them to a list object),
+ so that you can refer to them directly. 
+ In other words, we can unpack the state variables specified in "state" 
+ and the model parameters specified in "parameters" using
+ the with() command, for our convenience.
+ For example, instead of having to write parameters["gamma"]
+ you can simply write gamma as long as you are within the {}
+ brackets of the with statement.
+
+ The next two lines are the differential equations that calculate the 
+ rate of change of the state variables. 
+ Note that for coding purposes it does not matter which name you
+ chose for the rate of change, but the most common notation is to
+ write dI and dR for compartments I and R as shown here. 
+
+ At the end of an R function we need to specify what we want the output
+ to be. Here, these outputs should be the rate of change of I and R:
+ that is, simply dI and dR. To specify these as outputs we use return().
+ To get the output in a convenient format, we are saving the
+ solutions to the differential equations as a vector within a list.
+
+ IMPORTANT: we have to return the rate of change variables in the 
+ same order as the input state variables.
+ Since in our state vector initial_state_values, we specify I as the first
+ variable and R as the second, similarly we also have to specify dI
+ as the first output and dR as the second.
+ If you have changed the name of your state variables or the rates of 
+ change variables, make sure to use the correct names here as well.
+
+
+ 
