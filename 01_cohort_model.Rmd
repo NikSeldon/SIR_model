@@ -9,7 +9,7 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-# Loading the packages
+### Loading the packages
 
 ```{r}
 
@@ -19,7 +19,7 @@ library(reshape2)  # package with functions to turn the model
 library(ggplot2)   # package for plotting
 ```
 
-# Filling in the input and specifying timesteps:
+### Filling in the input and specifying timesteps:
 ```{r}
 initial_number_infected <- 1000000  # a cohort, 1000000 currently infected
                                     # people
@@ -63,7 +63,7 @@ times <- seq(from = 0, to = follow_up_duration, by = 1)
  if you had put 4 as the follow-up duration, you would simply be 
  calculating the number of infected and recovered people over a 4 days.
  
-# Specifying the model function
+### Specifying the model function
  
 ```{r}
 cohort_model <- function(time, state, parameters) {    # specify the model 
@@ -124,5 +124,59 @@ cohort_model <- function(time, state, parameters) {    # specify the model
  If you have changed the name of your state variables or the rates of 
  change variables, make sure to use the correct names here as well.
 
+### Solving the model equations using the ode() function 
+in the deSolve package and saving them as a dataframe object:
 
- 
+```{r}
+output <- as.data.frame(ode(y = initial_state_values, 
+                            times = times, 
+                            func = cohort_model,
+                            parms = parameters))
+
+# We are using the default integration function of the deSolve package,
+# ode (which stands for ordinary differential equations)
+# While the package contains other methods to do the integration,
+# you don't have to worry about that in this course.
+
+# Printing the model output
+output
+
+# This returns a dataframe with columns:
+# "time" (containing our times vector), 
+# "I" (containing the number of infected people at each timestep) and 
+# "R" (containing the number of recovered people at each timestep).
+```
+
+```{r}
+output[output$time == 28, c("time","R")]   
+# printing the "time" and "R" output columns when the timestep equals 28
+# Answer: 939189.9 people are in the recovered compartment at timestep 28
+```
+
+### Plotting the output
+
+```{r}
+# First turn the output dataset into a long format, so that the
+# number in each compartment at each timestep are all in the same column
+output_long <- melt(as.data.frame(output), id = "time")                  
+
+# Plot the number of people in each compartment over time
+ggplot(data = output_long,          # specify object containing data to plot
+       aes(x = time, y = value, colour = variable, group = variable)) +  
+       # in the long-format output dataset, the number in each compartment
+       # is in the "value" column and the compartment the number relates 
+       # to is in the "variable" column. We are telling ggplot to assign a 
+       # different colour to each compartment/group, which automatically 
+       # generates a legend
+  geom_line() +                                                          
+       # we want to represent the data over time as lines. 
+       # This command automatically looks to the specifications saved
+       # in the ggplot command above to know which data to plot
+  xlab("Time (days)")+                          # add label for x axis
+  ylab("Number of people") +                    # add label for y axis
+  labs(title = paste("Number infected and recovered over time when gamma =",
+               parameters["gamma"],"days^-1")) # add title
+# Using the paste() command, we can combine sentences with the 
+# values stored in variables (here gamma)
+```
+
